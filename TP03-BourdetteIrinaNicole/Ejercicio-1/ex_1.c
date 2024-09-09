@@ -42,4 +42,6 @@ int main() {
     printf("\nCantidad de E: %d", cant_e);
     printf("\nCantidad de O: %d", cant_o);
     printf("\nTotal: %d", total_vocales);
+
+    return 0;
 }
