@@ -15,8 +15,9 @@ int main() {
     punto = 46;
 
     /// Comienzo la iteración Do-While para ingresar la oracion, contar las vocales y que termine cuando el usuario escriba un punto:
+    
+    printf("Escriba una oración:\n");
     do {
-        printf("Escriba una oración:\n");
         scanf("%c",&frase);
         //// Cuento vocales
         switch (frase) {
