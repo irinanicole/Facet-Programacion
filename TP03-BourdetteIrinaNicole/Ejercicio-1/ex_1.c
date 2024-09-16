@@ -1,3 +1,4 @@
+// EJERCICIO 1 - "VOCALES ABIERTAS"
 // Contar la cantidad de vocales ABIERTAS que hay en una oracion y al ultimo mostrar el conteo total de cada una con el total de vocales entre las tres.
 
 #include <stdio.h>
