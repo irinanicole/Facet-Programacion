@@ -35,19 +35,31 @@ int main() {
             case 1:
                 printf("\nUsted ha elegido la opcion SUMA.\n");
                 resultado = suma (num1, num2);
-                printf("\nEl resultado de la suma entre %d y %d es igual a %d",num1,num2,resultado,"\n");
+                printf("\nEl resultado de la operación %d + %d es igual a %d", num1, num2, resultado,"\n");
                 break;
             case 2:
                 printf("\nUsted ha elegido la opcion RESTA.\n");
+                resultado = resta (num1, num2);
+                printf("\nEl resultado de la operación %d - %d es igual a %d", num1, num2, resultado,"\n");
                 break;
             case 3:
                 printf("\nUsted ha elegido la opcion PRODUCTO.\n");
+                resultado = producto (num1, num2);
+                printf("\nEl resultado de la operación %d x %d es igual a %d", num1, num2, resultado,"\n");
                 break;
             case 4:
-                printf("\nUsted ha elegido la opcion DIVISION.\n");
+                printf("\nUsted ha elegido la opcion DIVISION (entera).\n");
+                resultado = division_entera (num1, num2);
+                if (resultado != 0) {
+                    printf("\nEl resultado entero de la operación %d / %d es igual a %d", num1, num2, resultado,"\n");
+                } else {
+                    printf("\nNo se puede realizar una DIVISION ENTERA entre %d y %d porque el dividendo es más chico que el divisor :(\n", num1, num2);
+                }
                 break;
             case 5:
                 printf("\nUsted ha elegido la opcion POTENCIA.\n");
+                resultado = potencia (num1, num2);
+                printf("\nEl resultado de la operación %d elevado a %d es igual a %d", num1, num2, resultado,"\n");
                 break;
             default:
                 printf("\nUsted ha elegido SALIR DEL PROGRAMA.\n");
@@ -64,18 +76,54 @@ int main() {
 
 int suma (int a, int b) {
     int result;
+
     result = a + b;
+
     return (result);
 }
 
 int resta (int a, int b) {
     int result;
+
     result = a - b;
+
     return (result);
 }
 
-// int producto (int a, int b);
+int producto (int a, int b) {
+    int result, i;
 
-// int division_entera (int a, int b);
+    result = 0;
 
-// int potencia (int a, int b);
+    for (i = 0 ; i < b ; i++) {
+         result += a;
+     }
+
+    return (result);
+}
+
+int division_entera (int a, int b) {
+    int result, i;
+    result = 0;
+    
+    if (a >= b) {
+        i = a;
+        while ( i >= b) {
+            i -= b;
+            result++;
+        }
+    }
+    
+    return (result);
+}
+
+int potencia (int a, int b) {
+    int result, i;
+    //result = 0;
+
+    //for (i = 0 ; i < b ; i++) {
+        result = suma (result, producto (a,a));
+    //}
+
+    return (result);
+}
