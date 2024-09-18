@@ -1,1 +1,1 @@
-ollo cada funcion
+clude <math.h>
