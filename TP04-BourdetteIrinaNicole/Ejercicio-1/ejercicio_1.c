@@ -118,12 +118,12 @@ int division_entera (int a, int b) {
 }
 
 int potencia (int a, int b) {
-    int result, i;
-    //result = 0;
+    int result, i, j;
+    result = 1;
 
-    //for (i = 0 ; i < b ; i++) {
-        result = suma (result, producto (a,a));
-    //}
+    for (i = 0 ; i < b ; i++) {
+       result = producto (result, a);
+    }
 
     return (result);
 }

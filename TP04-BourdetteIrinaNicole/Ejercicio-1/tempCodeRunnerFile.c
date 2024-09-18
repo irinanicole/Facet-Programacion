@@ -1,0 +1,1 @@
+ollo cada funcion
