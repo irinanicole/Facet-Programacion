@@ -1,4 +1,3 @@
-#include <math.h>
 // Defino todas las funciones que voy a crear:
 int selector_operacion(int op, int a, int b);
 //

@@ -25,7 +25,7 @@ int main() {
 
     } while (operacion != 0) ;
 
-    printf("\n---> AQUÍ TERMINA EL PROGGRAMA <---\n");
+    printf("\n---> AQUÍ TERMINA EL PROGRAMA <---\n");
     
     return 0;
 }
