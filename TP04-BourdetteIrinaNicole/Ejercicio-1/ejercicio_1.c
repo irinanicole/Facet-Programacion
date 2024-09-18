@@ -118,7 +118,7 @@ int division_entera (int a, int b) {
 }
 
 int potencia (int a, int b) {
-    int result, i, j;
+    int result, i;
     result = 1;
 
     for (i = 0 ; i < b ; i++) {
