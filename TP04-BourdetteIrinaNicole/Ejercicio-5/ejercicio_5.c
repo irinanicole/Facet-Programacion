@@ -40,6 +40,6 @@ int main () {
     }
 
     
-    puts("\n---> AQUÍ TERMINA EL PROGRAMA <---\n");
+    puts("\n---> AQUÍ COMIENZA EL PROGRAMA <---\n");
     return 0;
 }

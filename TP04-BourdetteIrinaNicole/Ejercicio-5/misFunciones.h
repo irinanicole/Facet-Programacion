@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-#define PI 3.14
+#define PI 3.1415926
 
 int mostrarMenu ();
 void calcularCuadrado (int l);
