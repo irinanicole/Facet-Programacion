@@ -22,7 +22,7 @@ int main () {
 
     printf("\nSeleccione el angulo que desee conocer:");
     printf("\n'A' --> Angulo opuesto al lado a\n'B' --> Angulo opuesto al lado b\n'C' --> Angulo opuesto al lado c\n");
-    scanf("%c",&angulo);
+    scanf(" %c",&angulo);
 
     // CALCULAR ANGULOS EN RADIANES Y GRADOS //
     alpha_rad = calcularAngulo (ladoA,ladoB,ladoC,angulo);
