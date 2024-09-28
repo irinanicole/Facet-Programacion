@@ -1,54 +1,142 @@
 #include <stdio.h>
-#include "misFunciones.h"
+#include <ctype.h>
+#include <string.h>
+#include <stdbool.h>
+#define TAMA 25
+
+int verificarContrasenia (char arreglo[], int tama);
+void mostrarValidez (char arreglo[], int tama, int validez);
 
 int main () {
-    puts("\n---> AQUÍ COMIENZA EL PROGRAMA <---\n");
-    int tama=20;
-    char contra[tama], salto_linea = '\n';
-    int long_contrasenia = 0, cont_mayus = 0, cont_minus = 0, cont_num = 0, cont_c_especial = 0;
-
-
-    puts("\nIngrese una contraseña que contenga al menos:\n\t--> 8 caracteres\n\t--> 1 MAYÚSCULA\n\t--> 1 minúscula\n\t--> 1 número\n\t--> 1 carácter especial\n");
-    scanf("%c",&cc);
+    printf("\n---> INICIO DEL PROGRAMA <---\n");
     
-     while ( cc != salto_linea ) {
-
-        long_contrasenia ++;
-        cont_mayus += verifica_letra_mayuscula (cc);
-        cont_minus += verifica_letra_minuscula (cc);
-        cont_num += verifica_numero (cc);
-        cont_c_especial += verifica_caracter_especial (cc);
-
-        scanf("%c",&cc);
-    }
+    char contra1[TAMA], contra2[TAMA];
     
-// no puedo hacer un procedimiento pra este caso porque la terminal me informa que no puedo usar tantos argumentos en una sola funcion
+    int longitud, es_valida = 0;
+    bool fin = false;
 
-    if ( (long_contrasenia >= 8) && (cont_mayus >=1) && (cont_minus >= 1) && (cont_num >= 1) && (cont_c_especial >= 1) ) {
-        puts("\nLa contraseña es válida :)\n");
-    } else {
-        puts("\nLa contraseña no es válida :(\n Debe contener al menos:\n");
-        //verifica_contrasenia (long_contraseña, cont_mayus, cont_minus, cont_num, cont_c_especial);
-        
-        if (long_contrasenia < 8) {
-            puts("--> 8 caracteres");
-        }
-        if (cont_mayus == 0) {
-            puts ("--> 1 mayúscula");
-        }
-        if (cont_minus == 0) {
-            puts("--> 1 minúscula");
-        }
-        if (cont_num == 0) {
-            puts ("--> 1 número");
-        }
-        if (cont_c_especial == 0) {
-            puts("--> 1 carácter especial");
-        }
+    printf("\nIngrese una contraseña que contenga al menos:\n\t--> 8 caracteres\n\t--> 1 letra MAYUSCULA\n\t--> 1 letra minuscula\n\t--> 1 numero\n\t--> 1 caracter especial\n");
+    // Leo la contraseña 1 entera
+    printf("\nIngresar aqui: ");
+    while (!es_valida)
+    {
+        gets(contra1);
+        longitud = strlen(contra1);
+        // analizo la contraseña ingresada
+        es_valida = verificarContrasenia(contra1, longitud);
+        mostrarValidez(contra1, longitud, es_valida);
     }
 
+    do
+    {
+        printf("\nRepita la contraseña: ");
+        gets(contra2);
+        // guardo la segunda contraseña ingresada y verifico que coincida con la primera por medio de la funcion 'strcmp()'
+        if(!strcmp(contra1,contra2))
+        {
+            printf("\n¡La contraseña ha sido creada exitosamente!");
+            printf("\nContraseña: ");
+            puts(contra1);
+            fin = true;
+        }
+        else
+        {
+            printf("\nLas contraseñas no coinciden.");
+        }
+    }
+    while (!fin);
 
+    printf("\n---> FIN DEL PROGRAMA <---\n");
     
-    puts("\n---> AQUÍ TERMINA EL PROGRAMA <---\n");
     return 0;
+}
+
+int verificarContrasenia(char arreglo[], int tama)
+{
+    int es_valida = 0;
+    bool long_es_mayor = false, tiene_mayus = false, tiene_minus = false, tiene_num = false, tiene_c_especial = false;
+
+    if (tama >= 8) {
+            long_es_mayor = true;
+        }
+
+        for (int i=0; i<tama; i++)
+        {
+            if (isupper(arreglo[i]))
+            {
+                tiene_mayus = true;
+            }
+            if (islower(arreglo[i]))
+            {
+                tiene_minus = true;
+            }
+            if (isdigit(arreglo[i]))
+            {
+                tiene_num = true;
+            }
+            if (!isdigit(arreglo[i]) && !isalpha(arreglo[i]))
+            {
+                tiene_c_especial = true;
+            }
+        }
+
+        if (long_es_mayor && tiene_mayus && tiene_minus && tiene_num && tiene_c_especial)
+        {
+            es_valida = 1;
+        }
+
+        return (es_valida);
+}
+
+void mostrarValidez (char arreglo[], int tama, int validez)
+{
+    bool long_es_mayor = false, tiene_mayus = false, tiene_minus = false, tiene_num = false, tiene_c_especial = false;
+    
+    if (validez)
+    {
+        printf("\nLa contraseña es válida :)\n");
+    }
+    else
+    {
+        printf("\nLa contraseña no es válida :(\n Debe contener al menos:\n");
+
+
+        if (tama < 8) {
+            printf("--> 8 caracteres\n");
+        }
+
+        for (int i=0; i<tama; i++)
+        {
+            if (isupper(arreglo[i]))
+            {
+                tiene_mayus = true;
+            }
+            if (islower(arreglo[i]))
+            {
+                tiene_minus = true;
+            }
+            if (isdigit(arreglo[i]))
+            {
+                tiene_num = true;
+            }
+            if (!isdigit(arreglo[i]) && !isalpha(arreglo[i]))
+            {
+                tiene_c_especial = true;
+            }
+        }
+        if (!tiene_mayus) {
+            printf ("--> 1 letra mayuscula\n");
+        }
+        if (!tiene_minus) {
+            printf ("--> 1 letra minuscula\n");
+        }
+        if (!tiene_num) {
+            printf ("--> 1 numero\n");
+        }
+        if (!tiene_c_especial) {
+            printf ("--> 1 caracter especial\n");
+        }
+
+        printf("\nIngrese una nueva contraseña: ");
+    }
 }
