@@ -6,15 +6,15 @@
 #include <ctype.h> // "misFunciones.h"
 #include <string.h> // main() ; "misFunciones.h"
 #include <stdbool.h> // main() ; "misFunciones.h"
+#define TAMA 25
+//
+
+int verificarContrasenia (char arreglo[TAMA], int tama);
+void mostrarValidez (char arreglo[TAMA], int tama, int validez);
 
 //
 
-int verificarContrasenia (char arreglo[], int tama);
-void mostrarValidez (char arreglo[], int tama, int validez);
-
-//
-
-int verificarContrasenia(char arreglo[], int tama)
+int verificarContrasenia(char arreglo[TAMA], int tama)
 {
     int es_valida = 0;
     bool long_es_mayor = false, tiene_mayus = false, tiene_minus = false, tiene_num = false, tiene_c_especial = false;
@@ -52,7 +52,7 @@ int verificarContrasenia(char arreglo[], int tama)
 }
 
 
-void mostrarValidez (char arreglo[], int tama, int validez)
+void mostrarValidez (char arreglo[TAMA], int tama, int validez)
 {
     bool long_es_mayor = false, tiene_mayus = false, tiene_minus = false, tiene_num = false, tiene_c_especial = false;
     

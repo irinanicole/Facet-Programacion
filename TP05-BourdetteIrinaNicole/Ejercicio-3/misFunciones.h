@@ -3,11 +3,12 @@
 //////////////////////////////////////////////////////
 
 #include <string.h> // main() ; "misFunciones.h"
+#define TAMA 30
 //
-void cargarNombreCompleto (char arreglo[]);
-void cargarNombreSinEspacios (char arreglo1[], char arreglo2[], int tama);
+void cargarNombreCompleto (char arreglo[TAMA]);
+void cargarNombreSinEspacios (char arreglo1[TAMA], char arreglo2[TAMA], int tama);
 //
-void cargarNombreCompleto (char arreglo[])
+void cargarNombreCompleto (char arreglo[TAMA])
 {
     int i = 0;
     char letra, salto_linea = '\n';
@@ -20,7 +21,7 @@ void cargarNombreCompleto (char arreglo[])
     while (letra != salto_linea);
 }
 
-void cargarNombreSinEspacios (char arreglo1[], char arreglo2[], int tama)
+void cargarNombreSinEspacios (char arreglo1[TAMA], char arreglo2[TAMA], int tama)
 {
     int i = 0, j = 0;
     while (i < (tama - 1))

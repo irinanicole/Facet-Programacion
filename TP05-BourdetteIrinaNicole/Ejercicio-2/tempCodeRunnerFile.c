@@ -1,0 +1,1 @@
+#define TAMA 25
