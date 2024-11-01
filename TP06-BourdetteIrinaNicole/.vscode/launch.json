@@ -7,9 +7,9 @@
       "request": "launch",
       "args": [],
       "stopAtEntry": false,
-      "externalConsole": true,
-      "cwd": "c:/Users/Alumno/Documents/TP06-BourdetteIrinaNicole/Ejercicio-01",
-      "program": "c:/Users/Alumno/Documents/TP06-BourdetteIrinaNicole/Ejercicio-01/build/Debug/outDebug",
+      "externalConsole": false,
+      "cwd": "D:\\Archivos\\OneDrive\\Documentos\\Archivos Nicky\\AA_FACET\\AA_PROGRAMACIÓN\\PRÁCTICOS\\TP06-BourdetteIrinaNicole\\Ejercicio-03",
+      "program": "D:\\Archivos\\OneDrive\\Documentos\\Archivos Nicky\\AA_FACET\\AA_PROGRAMACIÓN\\PRÁCTICOS\\TP06-BourdetteIrinaNicole\\Ejercicio-03\\ejercicio_3.exe",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
