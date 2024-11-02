@@ -7,7 +7,7 @@ void mezclarCadenas (char *cad1, char *cad2, int pos);
 
 int main ()
 {
-    char cadena1[100], cadena2[100], *cadena1Aux;
+    char cadena1[100], cadena2[100], *cad1, *cad2;
     int posicion;
 
     printf("\nEscriba la primera frase: ");
@@ -23,12 +23,13 @@ int main ()
     puts(cadena2);
     printf("Numero: %d", posicion);
 
-    cadena1Aux = cadena1;
+    cad1 = cadena1;
+    cad2 = cadena2;
 
-    mezclarCadenas(cadena1Aux, cadena2, posicion);
+    mezclarCadenas(cad1, cad2, posicion);
     
     printf("\nCadena 1 de salida: ");
-    puts(cadena1Aux);
+    puts(cad1);
 
     return 0;
 }
@@ -36,37 +37,34 @@ int main ()
 void mezclarCadenas (char *cad1, char *cad2, int pos)
 {
     int i = pos-1, j = 0;
-    char *aux;
-    while (*cad2 != '\0')
+    char aux[100];
+
+    // Copiar caracteres de cad1 a aux desde posicion pos
+    while (cad1[i] != '\0')
     {
-        *aux = cad1[i];
-        cad1[i] = cad2[j];
-        aux++;
-        cad1++;
+        aux[j] = cad1[i];
+        i++;
         j++;
     }
-    i = 0;
-    j--;
-    while (*cad1 != '\0')
+    aux[j] = '\0'; // agrega caracter nulo
+
+    // Insertar cad2 en cad1 a partir de la posicion pos
+    i = pos-1;
+    j = 0;
+    while (cad2[j] != '\0')
     {
-        cad1[j] = aux[i];
+        cad1[i] = cad2[j];
+        i++;
+        j++;
+    }
+
+    // Reiniciar el indice j para usar aux y colocar su contenido devuelta en cad1
+    j = 0;
+    while (aux[j] != '\0')
+    {
+        cad1[i] = aux[j];
         j++;
         i++;
     }
-    printf("hola");
-    // while (*cad1 != '\0')
-    // {
-    //     if (i == (pos-1))
-    //     {
-    //         while (*cad2 != '\0')
-    //         {
-    //             *aux = *cad1;
-    //             *cad1 = &cad2[j];
-    //             aux++;
-    //             cad1++;
-    //             j++;
-    //         }
-    //     }
-    //     i++;
-    // }
+    cad1[i] = '\0'; // Asegurar el caracter nulo al final de la cadena cad1
 }
