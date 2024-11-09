@@ -18,8 +18,8 @@ int main()
     float *perdida, ganancia, saldo_final;
     float *totalPerdida = 0, *totalGanancia = 0;
 
-    totalPerdida = (float *)malloc(cant_jugadas * sizeof(float));
-    totalGanancia = (float *)malloc(cant_jugadas * sizeof(float));
+    totalPerdida = (float *)malloc(sizeof(float));
+    totalGanancia = (float *)malloc(sizeof(float));
 
     do
     {
@@ -41,12 +41,9 @@ int main()
         printf("\n\n¿Hay mas jugadores? (si-> 1 | no -> 0): ");
         scanf("%d",&fin);
         free(puntos);
-        if (jugador == cant_jugadas && !fin) {
-            cant_jugadas++;
-            totalPerdida = (float *)realloc(totalPerdida, cant_jugadas * sizeof(float));
-            totalGanancia = (float *)realloc(totalGanancia, cant_jugadas * sizeof(float));
-        }
-    } while (!fin);
+        
+        jugador++;
+    } while (fin);
 
     printf("\nTotal Perdidas: %.2f",*totalPerdida);
     printf("\nTotal Ganancias: %.2f",*totalGanancia);
