@@ -1,36 +1,41 @@
-/* VERSION 1.0 */
+/* VERSION 1.1 */
 // INSERTAR LA SEGUNDA CADENA EN LA PRIMERA, a partir del carácter que está en la posición indicada por el número.
 // Mostrar la primera cadena modificada.
 
+//MISMO EJERCICIO 3 USANDO FUNCIONES PARA ASIGNACION DINAMICA DE PUNTEROS//
 #include <stdio.h>
+#include <stdlib.h>
 
 void mezclarCadenas (char *cad1, char *cad2, int pos);
 
 int main ()
 {
-    char cadena1[100], cadena2[100], *cad1, *cad2;
-    int posicion;
+    char *cad1, *cad2;
+    int posicion, long1, long2;
+
+    cad1 = (char *)malloc(sizeof(char));
+    cad2 = (char *)malloc(sizeof(char));
 
     printf("\nEscriba la primera frase: ");
-    gets(cadena1);
+    gets(cad1);
     printf("\nEscriba la segunda frase: ");
-    gets(cadena2);
+    gets(cad2);
     printf("\nIngrese un numero para concatenar la cadena 2 a la cadena 1 en esa posicion: ");
     scanf("%d", &posicion);
 
     printf("\nCadena 1: ");
-    puts(cadena1);
+    puts(cad1);
     printf("Cadena 2: ");
-    puts(cadena2);
+    puts(cad2);
     printf("Numero: %d", posicion);
-
-    cad1 = cadena1;
-    cad2 = cadena2;
 
     mezclarCadenas(cad1, cad2, posicion);
     
-    printf("\nCadena 1 de salida: ");
+    printf("\n\tCadena 1 de salida: ");
     puts(cad1);
+
+    free(cad1);
+    free(cad2);
 
     return 0;
 }
