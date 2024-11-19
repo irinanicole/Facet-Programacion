@@ -9,10 +9,10 @@ typedef struct {
 } tFecha;
 
 typedef struct {
-    char cvu[9];
+    unsigned long cvu;
     float saldo;
-    float *transacciones;
-    int cant_transac;
+    float *historial;
+    unsigned cant_transac;
 } tCuenta;
 
 typedef struct {
@@ -24,40 +24,41 @@ typedef struct {
     tCuenta cuenta;
 } tCliente;
 
-int elegirUsuario (tCliente *clientes);
-void cambiarContrasenna (char *contra);
-void agregarFondos (float *saldo, float *transacciones, int *cant_transac);
-void retirarFondos (float *saldo, float *transacciones, int *cant_transac);
-void consultarSaldo (float saldo);
-void mostrarInfoCuenta (char *nombre, char *apellido, char *cvu);
-void mostrarHistorialTransac (float *transacciones, int cant_transac);
+void nuevoCliente (tCliente **clientes, int cant_nueva);
+int elegirUsuario (tCliente *clientes, int cant_clientes);
+void cambiarContrasenna (tCliente *c);
+void agregarFondos (tCliente *c);
+void retirarFondos (tCliente *c);
+void consultarSaldo (tCliente *c);
+void mostrarInfoCuenta (tCliente *c);
+void mostrarHistorialTransac (tCliente *c);
 
 int main()
 {
-    /* INICIALIZACIÓN */
-    tCliente clientes[4] = {
-        {"Gonzalez", "Juan", 12345678, {15, 5, 1990}, "pass123", {"123456789", 1000.0, NULL, 0}},
-        {"Lopez", "Maria", 87654321, {10, 8, 1985}, "pass456", {"987654321", 1500.0, NULL, 0}},
-        {"Navarro", "Marcelo", 85651321, {19, 2, 1979}, "pass450", {"123456789", 41500.0, NULL, 0}},
-        {"Medina", "Nazareno", 87654321, {21, 10, 1980}, "pass999", {"987654321", 25500.0, NULL, 0}}
-    };
-    for (int i = 0; i < 4; i++)
-    {
-        clientes[i].cuenta.transacciones = (float *)malloc(10 * sizeof(float));
-    }
-
+    int cant_clientes = 4, crearUsuario = 0, finOperacion = 0, usuario, operacion;
+    
     printf("\n----> INICIO <----\n");
+    tCliente * clientes = (tCliente *)malloc(cant_clientes * sizeof(tCliente));
+    /* INICIALIZACIÓN */
+    clientes[0] = (tCliente){"Gonzalez", "Juan", 12345678, {15, 5, 1990}, "pass123", {123456789, 1000.0, NULL, 0}};
+    clientes[1] = (tCliente){"Lopez", "Maria", 87654321, {10, 8, 1985}, "pass456", {987654321, 1500.0, NULL, 0}};
+    clientes[2] = (tCliente){"Navarro", "Marcelo", 85651321, {19, 2, 1979}, "pass450", {123456789, 41500.0, NULL, 0}};
+    clientes[3] = (tCliente){"Medina", "Nazareno", 87654321, {21, 10, 1980}, "pass999", {987654321, 25500.0, NULL, 0}};
+    for (int i = 0; i < cant_clientes; i++) clientes[i].cuenta.historial = (float *)malloc(sizeof(float));
 
     /* MENU PRINCIPAL */
-    int finOperacion = 0;
-    int usuario = elegirUsuario(clientes);
+    usuario = elegirUsuario(clientes, cant_clientes);
 
     /* MENU SECUNDARIO */
-    int operacion;
     do {
         if (usuario == 0) {
             finOperacion = 1;
         } else {
+            if (usuario == (cant_clientes+1)) {
+                cant_clientes++;
+                nuevoCliente(&clientes, cant_clientes);
+                printf("\n<=== BIENVENIDO ===>\n");
+            }
             /* MENU SECUNDARIO */
             printf("\n==> MENU <==\n");
             printf("\n{1}=>Cambiar contrasenna.");
@@ -72,15 +73,14 @@ int main()
             scanf("%d",&operacion);
             while(fgetc(stdin) != '\n');
             switch (operacion) {
-                case 1: cambiarContrasenna(clientes[usuario-1].contrasenna); break;
-                case 2: agregarFondos(&clientes[usuario-1].cuenta.saldo, clientes[usuario-1].cuenta.transacciones, &clientes[usuario-1].cuenta.cant_transac); break;
-                case 3: retirarFondos(&clientes[usuario-1].cuenta.saldo, clientes[usuario-1].cuenta.transacciones, &clientes[usuario-1].cuenta.cant_transac); break;
-                case 4: consultarSaldo(clientes[usuario-1].cuenta.saldo); break;
-                case 5: mostrarInfoCuenta(clientes[usuario-1].nombre, clientes[usuario-1].apellido, clientes[usuario-1].cuenta.cvu); break;
-                case 6: mostrarHistorialTransac(clientes[usuario-1].cuenta.transacciones, clientes[usuario-1].cuenta.cant_transac); break;
+                case 1: cambiarContrasenna(&clientes[usuario-1]); break;
+                case 2: agregarFondos(&clientes[usuario-1]); break;
+                case 3: retirarFondos(&clientes[usuario-1]); break;
+                case 4: consultarSaldo(&clientes[usuario-1]); break;
+                case 5: mostrarInfoCuenta(&clientes[usuario-1]); break;
+                case 6: mostrarHistorialTransac(&clientes[usuario-1]); break;
                 default:
-                    usuario = elegirUsuario(clientes);
-                    break;
+                    usuario = elegirUsuario(clientes, cant_clientes); break;
             }
         }
     } while (!finOperacion);
@@ -88,25 +88,61 @@ int main()
 
     for (int j = 0; j < 4; j++)
     {
-        free(clientes[j].cuenta.transacciones);
+        free(clientes[j].cuenta.historial);
+        clientes[j].cuenta.historial = NULL;
+        clientes[j].cuenta.cant_transac = 0;
     }
     printf("\n----> FIN <----\n");
     return 0;
 }
 
 /*===================================================*/
+/* CREACION DE USUARIO NUEVO */
+void nuevoCliente (tCliente **clientes, int cant_nueva)
+{
+    *clientes = (tCliente *)realloc(*clientes, cant_nueva * sizeof(tCliente));
+    /* LLENADO DE DATOS */
+    printf("\nApellido: ");
+    gets((*clientes)[cant_nueva-1].apellido);
+    
+    printf("\nNombre: ");
+    gets((*clientes)[cant_nueva-1].nombre);
+    
+    printf("\nDNI: ");
+    scanf("%d",&(*clientes)[cant_nueva-1].dni);
+    
+    printf("\n--Fecha de Nacimiento--\n");
+    printf("Dia: "); scanf("%d",&(*clientes)[cant_nueva-1].fecNac.dia);
+    printf("Mes: "); scanf("%d",&(*clientes)[cant_nueva-1].fecNac.mes);
+    printf("Anno: "); scanf("%d",&(*clientes)[cant_nueva-1].fecNac.anno);
+    while(fgetc(stdin)!='\n');
+
+    printf("\nContrasenna: ");
+    gets((*clientes)[cant_nueva-1].contrasenna);
+
+    printf("\n--Datos Cuenta--\n");
+    printf("CVU: "); scanf("%u",&(*clientes)[cant_nueva-1].cuenta.cvu);
+    printf("Saldo actual: "); scanf("%f",&(*clientes)[cant_nueva-1].cuenta.saldo);
+    (*clientes)[cant_nueva-1].cuenta.historial = (float *)malloc(sizeof(float)); /* historial[] = NULL */
+    (*clientes)[cant_nueva-1].cuenta.cant_transac = 0; /* cantidad_transacciones = 0 */
+
+    printf("\nLlenado de datos exitoso!\n");
+}
+
+/*===================================================*/
 /* FUNCION - MENU PRINCIPAL */
 
-int elegirUsuario (tCliente *clientes)
+int elegirUsuario (tCliente *clientes, int cant_clientes)
 {
     int usu;
     printf("\n--> Eligir un usuario <--");
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < cant_clientes; i++) {
         printf("\nUsuario %d: [%s, %s, %d]", i+1, clientes[i].apellido, clientes[i].nombre, clientes[i].dni);
     }
+    printf("\n\n--[Ingrese %d: Para registrar un nuevo usuario]--",cant_clientes+1);
     printf("\n\n--[Ingrese 0: Para finalizar]--");
     printf("\n\n--> usuario: ");
-    scanf("%d",&usu);
+    scanf("%d",&usu); while(fgetc(stdin)!='\n');
 
     return usu;
 }
@@ -114,63 +150,69 @@ int elegirUsuario (tCliente *clientes)
 /*===================================================*/
 /* PROCEDIMIENTOS */
 
-void cambiarContrasenna (char *contra)
+void cambiarContrasenna (tCliente *c)
 {
-    printf("\nIngresar la nueva contrasenna: ");
-    gets(contra);
+    printf("\nContrasenna actual: %s",c->contrasenna);
+    printf("\nNueva contrasenna: ");
+    gets(c->contrasenna);
+
+    printf("\nContrasenna cambiada con exito.\nNueva contrasenna: %s\n",c->contrasenna);
 }
 
-void agregarFondos (float *saldo, float *transacciones, int *cant_transac)
+void agregarFondos (tCliente *c)
 {
-    printf("\nIngrese el monto a agregar: ");
     float monto;
+    printf("\nIngrese el monto a agregar: ");
     scanf("%f",&monto);
     while(fgetc(stdin)!='\n');
-    *saldo += monto;
-    *cant_transac++;
-    if (*cant_transac > 10) {
-        transacciones = (float *)realloc(transacciones, *cant_transac * sizeof(float));
+    c->cuenta.saldo += monto;
+    c->cuenta.cant_transac++;
+    if (c->cuenta.cant_transac > 1) {
+        c->cuenta.historial = (float *)realloc(c->cuenta.historial, c->cuenta.cant_transac * sizeof(float));
     }
-    transacciones[*cant_transac-1] = monto;
+    c->cuenta.historial[c->cuenta.cant_transac-1] = monto;
+    printf("\nAgregado de fondos exitoso.\n");
 }
 
-void retirarFondos (float *saldo, float *transacciones, int *cant_transac)
+void retirarFondos (tCliente *c)
 {
-    if (*saldo) {
+    float monto;
+    if (c->cuenta.saldo) {
         printf("\nIngrese el monto a retirar: ");
-        float monto;
         scanf("%f",&monto);
-        if (monto <= *saldo) {
+        if (monto <= c->cuenta.saldo) {
             while(fgetc(stdin)!='\n');
-            *saldo -= monto;
-            *cant_transac++;
-            if (*cant_transac > 10) {
-                transacciones = (float *)realloc(transacciones, *cant_transac * sizeof(float));
+            c->cuenta.saldo -= monto;
+            c->cuenta.cant_transac++;
+            if (c->cuenta.cant_transac > 1) {
+                c->cuenta.historial = (float *)realloc(c->cuenta.historial, c->cuenta.cant_transac * sizeof(float));
             }
-            transacciones[*cant_transac-1] = monto;
+            c->cuenta.historial[c->cuenta.cant_transac-1] = -monto;
+            printf("\nRetiro de fondos exitoso.\n");
         } else {
-            printf("\nNo hay suficiente saldo en la cuenta pra retirar ese monto.");
+            printf("\nNo hay suficiente saldo en la cuenta pra retirar ese monto.\n");
         }
     } else {
         printf("\nNo dispone de saldo para retirar.");
     }
 }
 
-void consultarSaldo (float saldo)
+void consultarSaldo (tCliente *c)
 {
-    printf("\nSaldo actual: %.2f", saldo);
+    printf("\nDisponible: %.2f\n", c->cuenta.saldo);
 }
 
-void mostrarInfoCuenta (char *nombre, char *apellido, char *cvu)
+void mostrarInfoCuenta (tCliente *c)
 {
-    printf("\nNombre: %s %s", nombre, apellido);
-    printf("\nCVU: %s", cvu);
+    printf("\nNombre: %s %s", c->nombre, c->apellido);
+    printf("\nCVU: %u\n", c->cuenta.cvu);
 }
 
-void mostrarHistorialTransac (float *transacciones, int cant_transac)
+void mostrarHistorialTransac (tCliente *c)
 {
-    printf("\n==> Historial de Transacciones <==");
-    for (int i = 0; i < cant_transac; i++) {
-        printf("\n[%d] => %.2f", i+1, transacciones[i]);
+    printf("\n==> TRANSACCIONES realizadas en la cuenta <==");
+    for (int i = 0; i < c->cuenta.cant_transac; i++) {
+        printf("\n[%d] => %.2f", i+1, c->cuenta.historial[i]);
     }
+    printf("\n");
 }

@@ -14,15 +14,13 @@ float calcularGanancia(int *puntos, int tiros, float *perdida, float *totalPerdi
 
 int main()
 {
-    int jugador = 1, tiros, *puntos, fin, cant_jugadas=100;
-    float *perdida, ganancia, saldo_final;
-    float *totalPerdida = 0, *totalGanancia = 0;
-
-    totalPerdida = (float *)malloc(sizeof(float));
-    totalGanancia = (float *)malloc(sizeof(float));
+    int jugador = 0, tiros, *puntos, fin;
+    float perdida, ganancia, saldo_final;
+    float totalPerdida = 0, totalGanancia = 0;
 
     do
     {
+        jugador++;
         printf("\n=> JUGADOR %d <=\n",jugador);
         printf("\nIngrese la cantidad de tiros que desea realizar: ");
         scanf("%d",&tiros);
@@ -30,27 +28,24 @@ int main()
         puntos = (int *)malloc(tiros * sizeof(int));
         cargarTiros(puntos, tiros);
         
-        *perdida = tiros * COSTO_TIRO;
-        ganancia = calcularGanancia(puntos, tiros, perdida, totalPerdida, totalGanancia);
+        perdida = tiros * COSTO_TIRO;
+        ganancia = calcularGanancia(puntos, tiros, &perdida, &totalPerdida, &totalGanancia);
 
-        saldo_final = ganancia - *perdida;
-        printf("\nPerdida: - $%.2f",jugador,*perdida);
+        saldo_final = ganancia - perdida;
         printf("\nGanancia: + $%.2f",ganancia);
+        printf("\nPerdida: - $%.2f",perdida);
         printf("\nSaldo Final: $%.2f",saldo_final);
         
-        printf("\n\n¿Hay mas jugadores? (si-> 1 | no -> 0): ");
+        printf("\n\n¿Desea terminar el juego? (si-> 1 | no -> 0): ");
         scanf("%d",&fin);
         free(puntos);
         
-        jugador++;
-    } while (fin);
+    } while (!fin);
 
-    printf("\nTotal Perdidas: %.2f",*totalPerdida);
-    printf("\nTotal Ganancias: %.2f",*totalGanancia);
-    printf("\nSALDO TOTAL: %.2f",(*totalGanancia-*totalPerdida));
+    printf("\nTotal Ganancias: + $%.2f",totalGanancia);
+    printf("\nTotal Perdidas: - $%.2f",totalPerdida);
+    printf("\nSALDO TOTAL: $%.2f",(totalGanancia-totalPerdida));
 
-    free(totalPerdida);    
-    free(totalGanancia);    
     return 0;
 }
 
