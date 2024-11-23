@@ -24,7 +24,8 @@ typedef struct {
     tCuenta cuenta;
 } tCliente;
 
-void nuevoCliente (tCliente **clientes, int cant_nueva);
+void nuevoCliente (tCliente *clientes, int cant_nueva);
+int verificarFecha(tFecha fecha);
 int elegirUsuario (tCliente *clientes, int cant_clientes);
 void cambiarContrasenna (tCliente *c);
 void agregarFondos (tCliente *c);
@@ -56,18 +57,18 @@ int main()
         } else {
             if (usuario == (cant_clientes+1)) {
                 cant_clientes++;
-                nuevoCliente(&clientes, cant_clientes);
+                nuevoCliente(clientes, cant_clientes);
                 printf("\n<=== BIENVENIDO ===>\n");
             }
             /* MENU SECUNDARIO */
             printf("\n==> MENU <==\n");
+            printf("\n{0}=>Volver al menu principal.\n");
             printf("\n{1}=>Cambiar contrasenna.");
             printf("\n{2}=>Agregar fondos.");
             printf("\n{3}=>Retirar fondos.");
             printf("\n{4}=>Consultar saldo.");
             printf("\n{5}=>Informacion de la cuenta.");
             printf("\n{6}=>Historial de transacciones.");
-            printf("\n{x}=>Volver al menu principal.\n");
             /* leo opcion */
             printf("\n--> opcion: ");
             scanf("%d",&operacion);
@@ -85,48 +86,71 @@ int main()
         }
     } while (!finOperacion);
 
-
-    for (int j = 0; j < 4; j++)
+    /* --> LIBRACIÓN DE MEMORIA <-- */
+    /* free(cuenta.historial); free(clientes); */
+    for (int j = 0; j < cant_clientes; j++)
     {
         free(clientes[j].cuenta.historial);
         clientes[j].cuenta.historial = NULL;
         clientes[j].cuenta.cant_transac = 0;
     }
+    free(clientes);
+    clientes = NULL;
+    cant_clientes = 0;
     printf("\n----> FIN <----\n");
     return 0;
 }
 
 /*===================================================*/
 /* CREACION DE USUARIO NUEVO */
-void nuevoCliente (tCliente **clientes, int cant_nueva)
+void nuevoCliente (tCliente *clientes, int cant_nueva)
 {
-    *clientes = (tCliente *)realloc(*clientes, cant_nueva * sizeof(tCliente));
+    clientes = realloc(clientes, cant_nueva);
+    int fecha_valida = 0;
     /* LLENADO DE DATOS */
     printf("\nApellido: ");
-    gets((*clientes)[cant_nueva-1].apellido);
+    gets(clientes[cant_nueva-1].apellido);
     
     printf("\nNombre: ");
-    gets((*clientes)[cant_nueva-1].nombre);
+    gets(clientes[cant_nueva-1].nombre);
     
     printf("\nDNI: ");
-    scanf("%d",&(*clientes)[cant_nueva-1].dni);
-    
-    printf("\n--Fecha de Nacimiento--\n");
-    printf("Dia: "); scanf("%d",&(*clientes)[cant_nueva-1].fecNac.dia);
-    printf("Mes: "); scanf("%d",&(*clientes)[cant_nueva-1].fecNac.mes);
-    printf("Anno: "); scanf("%d",&(*clientes)[cant_nueva-1].fecNac.anno);
-    while(fgetc(stdin)!='\n');
+    scanf("%d",&clientes[cant_nueva-1].dni); /* scanf("%d",&clientes[cant_nueva-1]->dni); */
+    /* fecha_nac */
+    do {
+        printf("\n--Fecha de Nacimiento--\n");
+        printf("Dia: "); scanf("%d",&clientes[cant_nueva-1].fecNac.dia);
+        printf("Mes: "); scanf("%d",&clientes[cant_nueva-1].fecNac.mes);
+        printf("Anno: "); scanf("%d",&clientes[cant_nueva-1].fecNac.anno);
+        while(fgetc(stdin)!='\n');
+        fecha_valida = verificarFecha(clientes[cant_nueva-1].fecNac);
+        if (!fecha_valida) {
+            fprintf(stderr,"\nFecha Invalida\n");
+        }
+    } while (!fecha_valida); 
 
     printf("\nContrasenna: ");
-    gets((*clientes)[cant_nueva-1].contrasenna);
+    gets(clientes[cant_nueva-1].contrasenna);
 
     printf("\n--Datos Cuenta--\n");
-    printf("CVU: "); scanf("%u",&(*clientes)[cant_nueva-1].cuenta.cvu);
-    printf("Saldo actual: "); scanf("%f",&(*clientes)[cant_nueva-1].cuenta.saldo);
-    (*clientes)[cant_nueva-1].cuenta.historial = (float *)malloc(sizeof(float)); /* historial[] = NULL */
-    (*clientes)[cant_nueva-1].cuenta.cant_transac = 0; /* cantidad_transacciones = 0 */
+    printf("CVU: "); scanf("%u",&clientes[cant_nueva-1].cuenta.cvu);
+    printf("Saldo actual: "); scanf("%f",&clientes[cant_nueva-1].cuenta.saldo);
+    clientes[cant_nueva-1].cuenta.historial = (float *)malloc(sizeof(float)); /* historial[] = NULL */
+    clientes[cant_nueva-1].cuenta.cant_transac = 0; /* cantidad_transacciones = 0 */
 
     printf("\nLlenado de datos exitoso!\n");
+}
+
+int verificarFecha(tFecha fecha)
+{
+    int dias[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    
+    int es_valida = (fecha.anno >= 2008 && fecha.anno <= 1950)
+                    && (fecha.mes >= 1 && fecha.mes <= 12)
+                    && (fecha.dia >= 1 && fecha.dia <= dias[fecha.mes-1] + 
+                        ((fecha.mes == 2) && (fecha.anno % 4 == 0)));
+    
+    return es_valida;
 }
 
 /*===================================================*/

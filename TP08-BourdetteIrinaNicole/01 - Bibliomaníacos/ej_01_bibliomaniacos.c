@@ -12,23 +12,24 @@ typedef struct {
 
 typedef struct {
     char nombre[MAX];
-    int edad;
+    unsigned edad;
     Fecha fechaPrestamo;
 } Lector;
 
 typedef struct {
     char titulo[MAX];
     char genero[MAX];
-    int numLectores;
+    unsigned cant_lectores;
     Lector *lectores;
 } Libro;
 
 // Declaración de funciones
-//Libro cargarDatosLibro();
-void mostrarDatosLibro(Libro *libros);
-void indicarLibroMasLeido(Libro *libros);
-void mostrarLibrosSociosMenoresDeEdad(Libro *libros);
-void mostrarLibroGeneroPolicial2023(Libro *libros);
+void cargarLibro(Libro **libros, int *num_libros);
+// void cargarLectores();
+void mostrarDatosLibro(Libro *libros, int num_libros);
+// void indicarLibroMasLeido(Libro *libros);
+// void mostrarLibrosSociosMenoresDeEdad(Libro *libros);
+// void mostrarLibroGeneroPolicial2023(Libro *libros);
 
 int main ()
 {
@@ -58,39 +59,40 @@ int main ()
     libros[3].lectores[1] = (Lector){"Laura Perez", 27, {22, 8, 2023}};
 
     // Llamado de funcion para cargar libros
-    //libros = cargarLibro();
-    mostrarDatosLibro(libros);
+    printf("\nSe cargara un libro a continuacion:\n");
+    cargarLibro(&libros, &num_libros);
+    mostrarDatosLibro(libros, num_libros);
 
 
     // Llamado de funciones operacionales
-    indicarLibroMasLeido(libros);
-    mostrarLibrosSociosMenoresDeEdad(libros);
-    mostrarLibroGeneroPolicial2023(libros);
+    // indicarLibroMasLeido(libros);
+    // mostrarLibrosSociosMenoresDeEdad(libros);
+    // mostrarLibroGeneroPolicial2023(libros);
 
-    free(libros[0].lectores);
-    free(libros[1].lectores);
-    free(libros[2].lectores);
-    free(libros[3].lectores);
+    for (int i = 0; i < libros->numLectores; i++) free(libros[i].lectores);
     free(libros);
     return 0;
 }
 
 // Desarrollo de funciones
-// Libro cargarDatosLibro();
-void mostrarDatosLibro(Libro *libros) {
-    
-    for (int i=0; i < 4; i++) {
+void cargarLibro(Libro **libros, int *num_libros) {
+    *num_libros++;
+    *libros = (Libro *)realloc(*libros, *num_libros * sizeof(Libro));
+
+    *libros[*num_libros-1] = (Libro){"Harry Potter y las Reliquias de La Muerte", "Fantasía", 1, (Lector *)malloc(1 * sizeof(Lector))};
+    (libros)[*num_libros-1]->lectores[0] = (Lector){"Juan Perez", 25, {12, 5, 2023}};
+}
+
+void mostrarDatosLibro(Libro *libros, int num_libros) {
+    for (int i=0; i < num_libros; i++) {
         printf("\n---> LIBROS <---\n");
-        printf("\nTitulo: ");
-        puts(libros[i].titulo);
-        printf("\nGenero: ");
-        puts(libros[i].genero);
+        printf("\nTitulo: %s",libros[i].titulo);
+        printf("\nGenero: %s", libros[i].genero);
         printf("\nNumero de lectores: %d",libros[i].numLectores);
         printf("\n--> Lectores del libro <--");
         for (int j = 0; j < libros[i].numLectores; j++)
         {
-            printf("\nNombre del lector: ");
-            puts(libros[i].lectores[j].nombre);
+            printf("\nNombre del lector: %s", libros[i].lectores[j].nombre);
             printf("\nEdad: %d",libros[i].lectores[j].edad);
             printf("\nFecha Prestamo: %d-%d-%d", libros[i].lectores[j].fechaPrestamo.dia, libros[i].lectores[j].fechaPrestamo.mes, libros[i].lectores[j].fechaPrestamo.anio);
         }
